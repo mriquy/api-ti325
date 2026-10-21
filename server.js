@@ -2,11 +2,44 @@ require('dotenv').config(); //carrega as variaveis do arquivo .env para o proces
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 // rota ou endpoint
             // request, response
-app.get('/ping', (req, res) => {
-    return res.json({message:'pong'});
+app.get('/', (req, res) => {
+    return res.json({message:'API TI325 rodando.....'});
 })
+
+
+app.post('/usuario', (req, res) => {
+    const { nome, idade } = req.body;
+
+    // transformações
+    // 1. converte o nome para MAISCULAS
+    // 2. calcula o ano aproximado de nascimento
+    // 3. adiciona um status personalizado
+    const nomeFormatado = nome ? nome.toUpperCase() : 'NÃO INFORMADO';
+    const anoNascimento = new Date().getFullYear() - idade;
+
+
+
+    return res.json({
+        mensagem: 'dados recebidos e processados com sucesso',
+        dadosOriginais: {nome, idade},
+        dadosProcessados:{
+        nomeFormatado,
+        idade,
+        anoNascimentoAproximado: anoNascimento,
+        perfil: idade >= 18 ? 'adulto' : 'adolecente'
+        }
+
+    })
+})
+
+
+
+
+
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
