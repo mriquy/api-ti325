@@ -1,5 +1,6 @@
 require('dotenv').config(); //carrega as variaveis do arquivo .env para o process.env
 const express = require('express');
+const cpfController =require('./cpfController.controller');
 const app = express();
 
 app.use(express.json());
@@ -38,7 +39,8 @@ app.post('/usuario', (req, res) => {
 
 
 
-
+// rota post chamando diretamente a função do controller receboCpf
+app.post('/cpf', cpfController.recebeCpf);
 
 
 const PORT = process.env.PORT;
