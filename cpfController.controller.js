@@ -7,7 +7,7 @@ function validarCpfSimples(cpfOriginal) {
     // /... / as barras no inicio e no fim servem para delimitar onde começa e termina a expressão regular do javascript
     // g é a flag global, ela diz ao javascript para substituir todas as ocorrencias
 
-    const apenasNumeros = string(cpfOriginal).replace(/\D/g, '');
+    const apenasNumeros = String(cpfOriginal).replace(/\D/g, '');
 
     //2. verifica se possui exatamente 11 digitos
     if (apenasNumeros.length !== 11){
@@ -19,9 +19,12 @@ function validarCpfSimples(cpfOriginal) {
 
 
     // 3. verifica se todos os digitos são iguais (ex: 111.111.111-11) é invalido
-    const todosIguais = /^(\D)\1{10}\$/.test(apenasNumeros);
+    const todosIguais = /^(\d)\1{10}$/.test(apenasNumeros);
     if (todosIguais) {
-        return { valido: false, motivo: 'CPF com todos os digitos iguais e invalido.'};
+        return { 
+            valido: false, 
+            motivo: 'CPF com todos os digitos iguais e invalido.'
+        };
     }
     
 
@@ -40,9 +43,22 @@ const cpfController = {
     recebeCpf: (req, res) =>{
         const { cpf } = req.body
 
+        // AQUI ESTA A LIGAÇÃO COM A FUNÇÃO DE VALIDAÇÃO
+        const resultado = validarCpfSimples(cpf)
+
+        // Se o CPF for invalido (por exemplo, "111.111.111.111")
+        if (!resultado.valido){
+            return res.status(400).json({
+                sucesso: false,
+                mensagem: resultado.motivo,
+                cpfEnviado: cpf 
+            })
+        }
+        // se for valido
+
         return res.json({
             sucesso: true,
-            mensagem: 'CPF recebido no controller com sucesso!',
+            mensagem: resultado.motivo,
             cpfEnviado: cpf
 
         
@@ -60,7 +76,13 @@ const cpfController = {
                 mensagem: resultado.motivo  
             })
         }
-    }
+        return res.json({
+            sucesso: true,
+            mensagem: resultado.motivo,
+            cpfEnviado: cpf
+        });
+    }    
+    
 }
 
 

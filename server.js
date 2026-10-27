@@ -46,6 +46,6 @@ app.post('/cpf', cpfController.recebeCpf);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
 //  console.log('servidor rodando... em http://localhost:3000')    
-    console.log('servidor rodando... em http://localhost:3000:${PORT}')
+    console.log(`servidor rodando... em http://localhost:${PORT}`)
 })
 
